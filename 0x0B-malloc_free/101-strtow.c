@@ -1,43 +1,40 @@
-#include <stdlib.h>
 #include "main.h"
-
+#include <stdlib.h>
+#include <stdlib.h>
 /**
-* **strtow - function that splits a string into words.
-* @str : pointer
-* Return: Char
-*/
-
-char **strtow(char *str)
+ * argstostr - concatenate strings pointed to by `av'
+ * @ac: number of strings
+ * @av: array of strings
+ *
+ * Return: point to new string, or NULL if failure
+ */
+char *argstostr(int ac, char **av)
 {
-	char **d;
-	int i;
-	int j = 0;
-	int con = 0;
+	int i, j, k, totalbytes = 0;
+	char *p;
 
-	if (str == NULL)
+	if (ac == 0 || av == NULL)
 		return (NULL);
 
-	for (i = 0 ; str[i] != '\0' ; i++)
+	for (i = 0; i < ac; ++i)
 	{
-		if (str[i] != 32)
-			con++;
+		for (j = 0; *(*(av + i) + j); ++j)
+			;
+		totalbytes += j;
+		++totalbytes; /* space for newline */
 	}
+	++totalbytes; /* space for string terminator */
 
-	d = malloc(sizeof(char) * con);
+	p = (char *) malloc(totalbytes * sizeof(char));
 
-	if (d == NULL)
+	if (p == NULL)
 		return (NULL);
-
-	for (i = 0 ; str[i] != '\0' ; i++)
+	for (i = 0, k = 0; i < ac; ++i, ++k)
 	{
-		if (str[i] != 32)
-		{
-			*d[j] = str[i];
-			j++;
-		}
-		else
-		{
-		}
+		for (j = 0; *(*(av + i) + j); ++j, ++k)
+			*(p + k) = *(*(av + i) + j);
+		*(p + k) = '\n';
 	}
-	return (d);
+	*(p + k + 1) = '\0';
+	return (p);
 }
